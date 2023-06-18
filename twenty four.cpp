@@ -1,14 +1,13 @@
 #include<bits/stdc++.h>
 using namespace std; 
 char cf;
-int q;
+int top,te;
 struct node
 {
 	int fl,fr;
 	char c;
 	int fz,fm;
 	int step;
-	int check_l,check_r;
 }f[4],t,V[4];
 string to__string(int x)
 {
@@ -44,24 +43,22 @@ node calculation(node x,node y,char c)
 	if(x.step<y.step)	x.step=y.step;
 	return x;
 }
-node calculation_formula(int l,int top)
+node calculation_formula(int l,int q)
 {
-	t;
-	q=top;
 	for(int i=l;i<4;i++)
 	{
-		if(f[i].fr && f[i].fr-f[i].check_r>0)
+		if(f[i].fr)
 		{
-			f[i].check_r++;
+			f[i].fr--;
 			break;
 		}
-		if(f[i].fl && f[i].fl-f[i].check_l>0)
+		if(f[i].fl)
 		{
-			f[i].check_l++;
-			if(f[i].c=='+' || f[i].c=='-' || i==l)
+			f[i].fl--;
+			if(i==l || f[i].c=='+' || f[i].c=='-')
 			{
-				V[top]=calculation_formula(i,top);
-				top++;
+				t=calculation_formula(i,top);
+				V[top++]=t;
 			}
 			else
 			{
@@ -87,26 +84,25 @@ node calculation_formula(int l,int top)
 		}
 	}
 	for(int i=q+1;i<top;i++)	V[q]=calculation(V[q],V[i],V[i].c);
+	top=q; 
 	return V[q];
 }
 void determine_24()
 {
-	node t=calculation_formula(0,0);
-	if(t.fz%t.fm==0 && t.fz/t.fm==24)
+	string s;
+	top=0;
+	for(int i=0;i<4;i++)
 	{
-		string s;
-		int top=0;
-		for(int i=0;i<4;i++)
-		{
-			for(int j=1;j<=f[i].fr;j++)	{s+=')';top--;}
-			if(i>0)	s+=f[i].c;
-			for(int j=1;j<=f[i].fl;j++)	{s+='(';top++;}
-			s+=to__string(f[i].fz);
-		}
-		for(int i=1;i<=top;i++)	s+=')';
-		s+="=24";
-		cout<<s<<endl;
+		for(int j=1;j<=f[i].fr;j++)	{s+=')';top--;}
+		if(i>0)	s+=f[i].c;
+		for(int j=1;j<=f[i].fl;j++)	{s+='(';top++;}
+		s+=to__string(f[i].fz);
 	}
+	while(top--)	s+=')';
+	top=0;
+	node w;
+	w=calculation_formula(0,0);
+	if(24*w.fm==w.fz)	cout<<s<<"=24\n";
 }
 void choose_brackets()
 {
@@ -116,8 +112,6 @@ void choose_brackets()
 		{
 			f[j].fl=0;
 			f[j].fr=0;
-			f[j].check_l=0;
-			f[j].check_r=0;
 			f[j].step=j;
 		}
 		switch(i)
@@ -153,7 +147,7 @@ void select_operator(int num)
 int main()
 {
 	srand(time(NULL));
-	while(true)
+	while(1)
 	{
 		for(int i=0;i<4;i++)
 		{
@@ -166,7 +160,6 @@ int main()
 		cin>>cf;
 		if(cf=='y')
 		{
-			
 			for(int i=0;i<4;i++)
 			{
 				swap(f[0],f[i]);
@@ -183,9 +176,8 @@ int main()
 				}
 				swap(f[0],f[i]);
 			}
-			
+			cout<<"end"<<endl;
 		}
 		system("pause");
 	}
-	return 0;
 }
