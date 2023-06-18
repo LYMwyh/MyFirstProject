@@ -5,6 +5,6 @@ c++ is an interesting thing!
 
 * Some small Projects
   
-  * Twenty-four
+  * Twenty four
 
     （Preparing）
